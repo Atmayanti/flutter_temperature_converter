@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'components/result.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,14 +16,20 @@ class _MyAppState extends State<MyApp> {
   double _kelvin = 0;
   double _reamur = 0;
   TextEditingController controllerInput = new TextEditingController();
+  String _newValue = "Kelvin";
+  double hasil = 0;
 
   void _konversi() {
     setState(() {
       _inputUser = double.parse(controllerInput.text);
-      _kelvin = _inputUser + 273;
-      _reamur = _inputUser * 0.8;
+      if (_newValue == "Kelvin")
+        hasil = _inputUser + 273;
+      else
+        hasil = (4 / 5) * _inputUser;
     });
   }
+
+  var listItem = ["Kelvin", "Reamur"];
 
   @override
   Widget build(BuildContext context) {
@@ -43,61 +50,24 @@ class _MyAppState extends State<MyApp> {
               TextFormField(
                 controller: controllerInput,
                 decoration:
-                    InputDecoration(hintText: 'Masukkan Suhu dalam Celcius'),
+                    InputDecoration(hintText: 'Masukkan Suhu Dalam celcius'),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
-              Container(
-                margin: EdgeInsets.only(top: 250),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Suhu dalam Reamour",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              _reamur.toString(),
-                              style: TextStyle(fontSize: 30),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Suhu dalam Kelvin",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              _kelvin.toString(),
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.normal),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+              DropdownButton<String>(
+                items: listItem.map((String value){
+                  return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),);
+                }).toList(),
+                value: _newValue,
+                onChanged: (String? changeValue) {
+                  setState(() {
+                  _newValue = changeValue.toString();
+                  });
+                },
               ),
+              result(hasil: hasil),
               Container(
                 margin: EdgeInsets.only(top: 170),
                 width: 1000,
