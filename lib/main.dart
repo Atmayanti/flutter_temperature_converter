@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'components/result.dart';
+import 'components/listHistory.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +19,7 @@ class _MyAppState extends State<MyApp> {
   TextEditingController controllerInput = new TextEditingController();
   String _newValue = "Kelvin";
   double hasil = 0;
+  List<String> listViewItem = <String>[];
 
   void _konversi() {
     setState(() {
@@ -55,22 +57,24 @@ class _MyAppState extends State<MyApp> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               DropdownButton<String>(
-                items: listItem.map((String value){
+                items: listItem.map((String value) {
                   return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),);
+                    value: value,
+                    child: Text(value),
+                  );
                 }).toList(),
                 value: _newValue,
                 onChanged: (String? changeValue) {
                   setState(() {
-                  _newValue = changeValue.toString();
+                    _newValue = changeValue.toString();
                   });
                   _konversi();
+                  listViewItem.add('$_newValue: $hasil');
                 },
               ),
               result(hasil: hasil),
               Container(
-                margin: EdgeInsets.only(top: 170),
+                margin: EdgeInsets.only(top: 20, bottom: 20),
                 width: 1000,
                 height: 40,
                 child: ElevatedButton(
@@ -79,7 +83,17 @@ class _MyAppState extends State<MyApp> {
                   },
                   child: Text('Konversi'),
                 ),
-              )
+              ),
+              const Center(
+                child: Text(
+                  'Riwayat Konversi',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Expanded(child: listHistory(listViewItem: listViewItem))
             ],
           ),
         ),
