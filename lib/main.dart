@@ -65,6 +65,7 @@ class _MyAppState extends State<MyApp> {
                   setState(() {
                   _newValue = changeValue.toString();
                   });
+                  _konversi();
                 },
               ),
               result(hasil: hasil),
