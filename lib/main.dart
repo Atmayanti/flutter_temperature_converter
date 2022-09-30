@@ -22,13 +22,15 @@ class _MyAppState extends State<MyApp> {
   List<String> listViewItem = <String>[];
 
   void _konversi() {
-    setState(() {
-      _inputUser = double.parse(controllerInput.text);
-      if (_newValue == "Kelvin")
-        hasil = _inputUser + 273;
-      else
-        hasil = (4 / 5) * _inputUser;
-    });
+    setState(
+      () {
+        _inputUser = double.parse(controllerInput.text);
+        if (_newValue == "Kelvin")
+          hasil = _inputUser + 273;
+        else
+          hasil = (4 / 5) * _inputUser;
+      },
+    );
   }
 
   var listItem = ["Kelvin", "Reamur"];
@@ -49,20 +51,16 @@ class _MyAppState extends State<MyApp> {
           margin: EdgeInsets.all(8),
           child: Column(
             children: [
-              TextFormField(
-                controller: controllerInput,
-                decoration:
-                    InputDecoration(hintText: 'Masukkan Suhu Dalam celcius'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              ),
+              Input(controllerInput: controllerInput),
               DropdownButton<String>(
-                items: listItem.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items: listItem.map(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
                 value: _newValue,
                 onChanged: (String? changeValue) {
                   setState(() {
@@ -73,17 +71,7 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
               result(hasil: hasil),
-              Container(
-                margin: EdgeInsets.only(top: 20, bottom: 20),
-                width: 1000,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _konversi();
-                  },
-                  child: Text('Konversi'),
-                ),
-              ),
+              ConversionButton(),
               const Center(
                 child: Text(
                   'Riwayat Konversi',
@@ -93,10 +81,52 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
               ),
-              Expanded(child: listHistory(listViewItem: listViewItem))
+              Expanded(
+                child: listHistory(listViewItem: listViewItem),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class Input extends StatelessWidget {
+  const Input({
+    Key? key,
+    required this.controllerInput,
+  }) : super(key: key);
+
+  final TextEditingController controllerInput;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controllerInput,
+      decoration: InputDecoration(hintText: 'Masukkan Suhu Dalam celcius'),
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    );
+  }
+}
+
+class ConversionButton extends StatelessWidget {
+  const ConversionButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 20, bottom: 20),
+      width: 1000,
+      height: 40,
+      child: ElevatedButton(
+        onPressed: () {
+          // _konversi();
+        },
+        child: Text('Konversi'),
       ),
     );
   }
